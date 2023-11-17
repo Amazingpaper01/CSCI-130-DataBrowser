@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>All Olympic Games</title>
+    <script src="jsFiles/src.js"></script>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <button onclick="displayData()">Display/Hide JSON Data</button>
+    <pre id="data"></pre>
+
+    <div>
+        <img id="olympicPicture" src="">
+    </div>
+
+    <table>
+        <tr class = "dataRow">
+            <td><label for="title">Title:</label></td>
+            <td><input type="text" id = "title" name ="title" value="" class = "inputs" readonly></input></td>
+        </tr>
+        <tr>
+            <td><label for="year">Year:</label></td>
+            <td><input id = "year" name ="year"type = text class = "inputs" readonly></input></td>
+        </tr>
+        <tr>
+            <td><label for="location">Location:</label></td>
+            <td><input id = "location" name = "location" type="text" class="inputs" readonly></input></td>
+        </tr>
+        <tr>
+           <td> <label for="season">Season:</label></td>
+           <td><input id="season" name="season" type="text" class="inputs" readonly></input></td>
+        </tr>
+        <tr>
+            <td><label for="mascot">Mascot:</label></td>
+            <td><input id="mascot" name="mascot" type="text" class="inputs" readonly></input></td>
+        </tr>
+    </table>
+
+    <section>
+        <div id="get"></div>
+        <button onclick="previous()">Previous</button>
+        <button onclick="next()">Next</button>
+    </section>
+
+    <div id = "buttonContainers">
+        <button class = "dbButtons"id = "editButton" type = "button" onclick = "edit()">Edit</button>
+        <!-- <button class = "dbButtons" id = "insertButton" type = "button" onclick = "insert()">Insert </button>
+        <button  class = "dbButtons" id = "deleteButton" type = "button" onclick = "deleteMovie()"> Delete</button>
+        <button class = "dbButtons"  id = "sortByTitleButton" type = "button" onclick = "sortByTitle()">Sort by Title</button>
+        <button class = "dbButtons"  id = "sortByYearButton" type = "button" onclick = "sortByYear()">Sort by Year</button>
+        <button class = "dbButtons"id = "select5Button" type = "button" onclick = "select5()">Show All 5s</button>
+        <button class = "dbButtons"id = "loadFromJSON" type = "button" onclick = "loadFromJSON()">! JSON->DB !</button> -->
+</div>
+</body>
