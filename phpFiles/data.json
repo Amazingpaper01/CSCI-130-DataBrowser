@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Tokyo Olympic Games",
+    "year": 2020,
+    "location": "Tokyo, Japan",
+    "season": "Summer",
+    "mascot": "Miraitowa",
+    "img": "https://i.guim.co.uk/img/media/fb2c6a6572441be138321397a563f550c8ea4cf7/0_251_4589_2754/master/4589.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=56fd19cbc915803cbd6bda50417d819b"
+  },
+  {
+    "name": "Rio Olympic Games",
+    "year": 2016,
+    "location": "Rio De Janeiro, Brazil",
+    "season": "Summer",
+    "mascot": "Vinicius",
+    "img": "https://content.fortune.com/wp-content/uploads/2016/03/rio-olympics0216.jpg"
+  },
+  {
+    "name": "Sochi Olympic Games",
+    "year": 2014,
+    "location": "Sochi, Russia",
+    "season": "Winter",
+    "mascot": "The Hare, Polar Bear, and Leopard",
+    "img": "https://worldpittsburgh.files.wordpress.com/2014/02/picture1.png"
+  },
+  {
+    "name": "Berlin Olympic Games",
+    "year": 1936,
+    "location": "Berlin, Germany",
+    "season": "Summer",
+    "mascot": "No Mascot",
+    "img": "https://alphahistory.com/nazigermany/wp-content/uploads/2012/06/stadium.jpg"
+  },
+  {
+    "name": "Vancouver Olympic Games",
+    "year": 2010,
+    "location": "Vancouver, British Columbia, Canada",
+    "season": "Winter",
+    "mascot": "Quatchi and Miga",
+    "img": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/2010_Winter_Olympics_logo.svg/1200px-2010_Winter_Olympics_logo.svg.png"
+  }
+]

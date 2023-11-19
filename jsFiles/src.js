@@ -19,72 +19,217 @@ const olym2010 = new Olympics("Vancouver Olympic Games", 2010, "Vancouver, Briti
 
 const olympicArr = [olym2020, olym2016, olym2014, olym1936, olym2010];
 
-let flag = true;
-function displayData() {                                            //displays json data when button is clicked
-    const jsonData = JSON.stringify(olympicArr, null, 2);           //stringifies the array into JSON format
-    if (flag){      //shows JSON onclick
-        document.getElementById("data").innerHTML = jsonData;
-        flag = false;
-    }
-    else {          //hides JSON on reclick
-        document.getElementById("data").innerHTML = '';
-        flag = true;
-    }
-}
+var newArr;         //new array responsible for handling json data 
+var index = 0;      //holds the current index 
+var len = 0;
 
-const newArr = new Array();         //new array responsible for handling json data 
-var index = 0;
+function createDB() {                           //creates the database in MySQL server
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // Handle success or error here
+        console.log(this.responseText);
+      }
+    };
+    req.open("POST", "phpFiles/createDB.php", true);
+    req.send();
+    document.getElementById("createDB").disabled = true;
+  }
 
-//Handles the http request and performs GET method to the server to read data for data.json
-var req = new XMLHttpRequest();
-req.onreadystatechange = function() {
-    if (this.readyState === 4 && this.status === 200) {
-        let data = JSON.parse(this.responseText);
-        for (let i = 0; i < data.length; i++) {
-        newArr.push(data[i]);
-    }
-    //displays the first object in the array
+  function fetchData() {                //fetches olympic data from the database. meant to be used to update the page from database
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // Parse the JSON response
+        try {
+        var response = JSON.parse(this.responseText);
+        } catch (err) {
+            console.log('Parsing error:', err);
+            console.log('Received response:', this.responseText);
+        }
+  
+        if (response.error) {
+          console.error('Error fetching data:', response.error);
+          return;
+        } 
+        
+        newArr = response;
+        len = newArr.length;
         console.log(newArr);
-        displayObj();
-    }
-};
-req.open("GET", "http://10.62.80.139/data.json", true);
-req.send();
+        loadObject();
+      }
+    };
+    xhttp.open("GET", "phpFiles/fetchData.php", true);
+    xhttp.send();
+  }
 
-function previous() {
+function previous() {             //goes to previous object
     if(index == 0){
-        index = 4;
-        displayObj();
+        index = len -1;
+        loadObject();
     }
     else {
         index--;
-        displayObj();
+        loadObject();
     }
 }
 
-function next() {
-    if(index == 4){
+function next() {                   //goes to next object
+    if(index == len-1){
         index = 0;
-        displayObj();
+        loadObject();
     }
     else {
         index++;
-        displayObj();
+        loadObject();
     }
 }
 
-//displays the objects in the new array (newArr)
-function displayObj() {
-    let obj = newArr[index];
-    let img = document.createElement('img');
-    img.src = obj.img;
-    img.alt = obj.name;
-    img.width = 400;
-    img.height = 400;
-    document.getElementById("get").innerHTML = "<b>Title: </b>" + obj.name + "<br>" 
-    + "<b>Year: </b>" + obj.year + "<br>"
-    + "<b>Location: </b>" + obj.location + "<br>"
-    + "<b>Season: </b>" + obj.season + "<br>"
-    + "<b>Mascot: </b>" + obj.mascot + "<br>";
-    document.getElementById("get").appendChild(img);
+function goToFirst() {              //goes to first object
+    index = 0;
+    loadObject();
 }
+
+function goToLast() {               //goes to last object 
+    index = len-1;
+    loadObject();
+}
+
+function loadObject() {             //function gets called when the next object needs to be loaded. 
+    document.getElementById('title').value = newArr[index].name || '';
+    document.getElementById('year').value = newArr[index].year || '';
+    document.getElementById('location').value = newArr[index].location || '';
+    document.getElementById('season').value = newArr[index].season || '';
+    document.getElementById('mascot').value = newArr[index].mascot || '';
+    document.getElementById('olympicPicture').src = newArr[index].img || '';
+    document.getElementById("currentIndex").innerHTML = index+1 + " out of " + len;     //displays current position in the table
+}
+
+/* INSERTING SCRIPT HERE */
+function openInsertModal() {
+        document.getElementById('insertModal').style.display = 'block';
+}
+
+function closeInsertModal() {
+        document.getElementById('insertModal').style.display = 'none';
+}
+
+function insertData() {                                     //inserts object data into the table on the database
+    var olympicData = {                                     //stores data into an object 
+      name: document.getElementById('newTitle').value,
+      year: document.getElementById('newYear').value,
+      location: document.getElementById('newLocation').value,
+      season: document.getElementById('newSeason').value,
+      mascot: document.getElementById('newMascot').value,
+      img: document.getElementById('newImg').value
+    };
+                                                            //makes connection request to server through AJAX 
+    let req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        if (response.success) {
+          console.log('Data inserted successfully');
+          closeInsertModal();
+          fetchData();
+        } else {
+          console.log('Error inserting data');
+        }
+      }
+    };
+    req.open("POST", "phpFiles/insert.php", true);
+    req.setRequestHeader("Content-Type", "application/json");
+    req.send(JSON.stringify(olympicData));
+    //fetchData();
+}
+
+/* DELETE DATA SCRIPT HERE */
+function deleteObj() {
+    var id = index+1;                       //gets position of current position 
+  
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+          if (response.success) {
+            console.log('Olympic event deleted successfully');
+            index--;
+            fetchData();
+          } else {
+            console.log('Error deleting the Olympic event');
+          }
+      }
+    };
+    xhttp.open("POST", "phpFiles/delete.php", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(JSON.stringify({ id: id }));
+  }
+
+  /* EDIT SCRIPT HERE*/
+  function edit() {
+    document.getElementById('editButton').style.display = 'none';
+    document.getElementById('saveButton').style.display = 'inline';
+    document.getElementById('newImgURLtxt').style.display = 'inline';
+    document.getElementById('newImgURL').style.display = 'inline';
+    var inputs = document.getElementsByClassName('inputs');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].readOnly = false;
+    }
+  }
+  
+  function saveEdit() {
+    var olympicData = {
+      id: index + 1,
+      name: document.getElementById('title').value,
+      year: document.getElementById('year').value,
+      location: document.getElementById('location').value,
+      season: document.getElementById('season').value,
+      mascot: document.getElementById('mascot').value,
+      img: document.getElementById('newImgURL').value
+    };
+  
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        if (response.success) {
+          console.log('Olympic event updated successfully');
+          document.getElementById('editButton').style.display = 'inline';
+          document.getElementById('saveButton').style.display = 'none';
+          document.getElementById('newImgURLtxt').style.display = 'none';
+          document.getElementById('newImgURL').style.display = 'none';
+          var inputs = document.getElementsByClassName('inputs');
+          for (var i = 0; i < inputs.length; i++) {
+            inputs[i].readOnly = true;
+          }
+          fetchData();
+        } else {
+          console.log('Error updating the Olympic event');
+        }
+      }
+    };
+    xhttp.open("POST", "phpFiles/edit.php", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(JSON.stringify(olympicData));
+  }
+
+  /* SORTING SCRIPT HERE */
+  function sortByTitle() {                  //orders the olympic games in alphabetical order based on name/title
+    newArr.sort((a, b) => {                 //using javascript sort() feature to sort the array of objects
+        let nameA = a.name.toUpperCase(); 
+        let nameB = b.name.toUpperCase();
+        
+        if (nameA < nameB) {
+          return -1; // 'a' comes first
+        }
+        if (nameA > nameB) {
+          return 1; // 'b' comes first
+        }
+        return 0; // names are equal
+      });
+      loadObject();
+  }
+
+  function sortDefault() {          //resets the original order
+        fetchData();
+  }

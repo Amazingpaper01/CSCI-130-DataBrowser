@@ -1,41 +1,39 @@
-<?php 
- 
+<?php
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
-$index = $_GET['index'];
+// creating connection
+$con = new mysqli("localhost", "olympicUser", "4VPnroTOC6wOU3mn", "Olympics");
 
-$len = $_GET['len'];
-    $con = mysqli_connect("localhost","moviesDB","movies","moviesite");
+// checks connection if it was successful
+if ($con->connect_error) {
+    die(json_encode(array('error' => 'Connection failed: ' . $con->connect_error)));
+}
 
-    $sql = "DELETE FROM `movies` WHERE movieIndex =".$index;   
-    
-   if($con->query($sql) == TRUE){
-      
-        
-    }else{
-       echo "Error: " . $sql . " <br>" . $con->error;
-    }
-    $con->close();
+// obtains id from AJAX call
+$inputJSON = file_get_contents('php://input');
+$input = json_decode($inputJSON, TRUE); // Convert JSON into an array
 
-    if($index == $len){
-        
+// Assume that the ID field is called 'id' and is unique for each Olympic event
+$id = $input['id'];
 
-    }else{
+// creating the DELETE operation
+$stmt = $con->prepare("DELETE FROM olympicsData WHERE id = ?");
+$stmt->bind_param("i", $id);
 
-    for($x = $index; $x < $len; $x++){
+// Execute the statement
+if ($stmt->execute()) {
+    echo json_encode(array('success' => 'Record deleted successfully'));
+} else {
+    echo json_encode(array('error' => 'Error: ' . $stmt->error));
+}
 
-    $con = mysqli_connect("localhost","moviesDB","movies","moviesite");
+// $resetAutoIncrementSQL = "ALTER TABLE olympicsData AUTO_INCREMENT = 1;";
+// $con->query($resetAutoIncrementSQL);
 
-    $sql = "UPDATE `movies` SET `movieIndex`='".$x."' WHERE movieIndex = ".$x+1;   
-    echo("hello");
-    
-   if($con->query($sql) == TRUE){
-      
-        
-    }else{
-       echo "Error: " . $sql . " <br>" . $con->error;
-    }
-    $con->close();
-    }
-    
-   }
+// cloeses the connection
+$stmt->close();
+$con->close();
 ?>
