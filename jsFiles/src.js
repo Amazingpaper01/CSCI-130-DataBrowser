@@ -233,3 +233,8 @@ function deleteObj() {
   function sortDefault() {          //resets the original order
         fetchData();
   }
+
+  /* UPLOADING IMAGE FILES HERE */
+  function upload() {
+    
+  }
