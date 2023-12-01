@@ -29,14 +29,12 @@ $mascot = $input['mascot'];
 $img = $input['img'];
 $id = $input['id'];
 
-// Execute the prepared statement
 if ($stmt->execute()) {
     echo json_encode(array('success' => 'Record updated successfully'));
 } else {
     echo json_encode(array('error' => 'Error: ' . $stmt->error));
 }
 
-// Close statement and connection
 $stmt->close();
 $con->close();
 ?>

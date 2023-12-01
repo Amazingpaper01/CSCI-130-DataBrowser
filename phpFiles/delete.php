@@ -16,14 +16,12 @@ if ($con->connect_error) {
 $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE); // Convert JSON into an array
 
-// Assume that the ID field is called 'id' and is unique for each Olympic event
 $id = $input['id'];
 
 // creating the DELETE operation
 $stmt = $con->prepare("DELETE FROM olympicsData WHERE id = ?");
 $stmt->bind_param("i", $id);
 
-// Execute the statement
 if ($stmt->execute()) {
     echo json_encode(array('success' => 'Record deleted successfully'));
 } else {
@@ -33,7 +31,7 @@ if ($stmt->execute()) {
 // $resetAutoIncrementSQL = "ALTER TABLE olympicsData AUTO_INCREMENT = 1;";
 // $con->query($resetAutoIncrementSQL);
 
-// cloeses the connection
+// closes the connection
 $stmt->close();
 $con->close();
 ?>

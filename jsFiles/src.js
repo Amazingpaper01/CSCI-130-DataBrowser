@@ -27,7 +27,6 @@ function createDB() {                           //creates the database in MySQL 
     var req = new XMLHttpRequest();
     req.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        // Handle success or error here
         console.log(this.responseText);
       }
     };
@@ -40,7 +39,7 @@ function createDB() {                           //creates the database in MySQL 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        // Parse the JSON response
+        // parses the JSON response
         try {
         var response = JSON.parse(this.responseText);
         } catch (err) {
@@ -107,11 +106,11 @@ function loadObject() {             //function gets called when the next object 
 
 /* INSERTING SCRIPT HERE */
 function openInsertModal() {
-        document.getElementById('insertModal').style.display = 'block';
+    document.getElementById('insertModal').style.display = 'block';
 }
 
 function closeInsertModal() {
-        document.getElementById('insertModal').style.display = 'none';
+    document.getElementById('insertModal').style.display = 'none';
 }
 
 function insertData() {                                     //inserts object data into the table on the database
@@ -177,7 +176,7 @@ function deleteObj() {
     }
   }
   
-  function saveEdit() {
+  function saveEdit() {     //saving the edit and AJAX call to the database
     var olympicData = {
       id: index + 1,
       name: document.getElementById('title').value,

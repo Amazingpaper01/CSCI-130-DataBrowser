@@ -14,7 +14,7 @@ if ($conn->query($sql) === TRUE) {
   echo "Error creating database: " . $conn->error . "\n";
 }
 
-// Select the database
+// selects the database
 $conn->select_db('Olympics');
 
 // sql to create table
@@ -34,11 +34,10 @@ if ($conn->query($sql) === TRUE) {
   echo "Error creating table: " . $conn->error . "\n";
 }
 
-// Assuming you have your JSON file named 'data.json' in the same directory
 $jsonData = file_get_contents('data.json');
 $olympicsData = json_decode($jsonData, true);
 
-// Prepare the insert statement
+// prepares the insert statement
 $stmt = $conn->prepare("INSERT INTO olympicsData (name, year, location, season, mascot, img) VALUES (?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("sissss", $name, $year, $location, $season, $mascot, $img);
 
